@@ -1,3 +1,5 @@
+%--------------2.1.1.
+
 %T1
 Uh_T1=400000;
 Ul_T1=132000;
@@ -47,7 +49,7 @@ c_L58=0;
 l_L58=30;
 Y_L58=transmission_line_admittance(r_L58,x_L58,c_L58,l_L58);
 
-%------------------------------------------------------------- Y
+%--------------2.1.2.
 
 y11=Y_T1(2,2)+Y_L13(1,1)+Y_L12(1,1);
 y22=Y_L12(2,2)+Y_T3(2,2)+Y_L23(2,2);
@@ -133,7 +135,9 @@ phi_G=atan(Q_G/P_G);
 S_G=sqrt(P_G^2+Q_G^2);
 Z_G=Un_G^2/S_G*(cos(phi_G)+1i*sin(phi_G));
 Y_G=1/Z_G;
-I_G=Un_G*Y_G;
+I_G=Un_G/sqrt(3)*Y_G;
+abs(I_G);
+radtodeg(angle(I_G));
 
 %--------------2.2.4.
 
@@ -141,37 +145,41 @@ Un_N=400000;
 S_N=6000000000;
 X_N=Un_N^2/S_N;
 Y_prime=Y;
-Y_prime(1,1)=Y_prime(1,1)+1i/X_N;
+Y_prime(1,1)=Y_prime(1,1)+1/(1i*X_N);
 Z_prime=inv(Y_prime);
 I_N=Un_N/(sqrt(3)*(1i*X_N));
-U_noload=Z_prime*[I_N;0;0;0;0;0;0;0]*sqrt(3);
-U_noload=U_noload*exp(-1i*angle(U_noload(1))) %forgatunk, hogy U1 szoge 0 legyen
+U_noload=Z_prime*[I_N;0;0;0;0;0;0;0]*sqrt(3); % gyok3-mal szorzunk, hogy vonali feszt kapjunk
+U_noload=U_noload*exp(-1i*angle(U_noload(1))); %forgatunk, hogy U1 szoge 0 legyen
+abs(U_noload);
+radtodeg(angle(U_noload));
 
-%--------------2.2.5a.
+%--------------2.2.5ab.
 
 U_LOAD8=132000;
 P_LOAD8=70000000;
 cosphi_LOAD8=0.92;
+S_LOAD8=sqrt(P_LOAD8^2+(P_LOAD8*tan(acos(cosphi_LOAD8)))^2);
 
 % Impedanciatarto modell
-R_LOAD8=U_LOAD8^2/P_LOAD8;
-X_LOAD8=R_LOAD8*tan(acos(cosphi_LOAD8));
-Z_LOAD8=R_LOAD8+1i*X_LOAD8;
+Z_LOAD8=(U_LOAD8^2/S_LOAD8)*(cosphi_LOAD8+1i*sin(acos(cosphi_LOAD8)));
 
 Y_2prime=Y_prime;
 Y_2prime(8,8)=Y_2prime(8,8)+1/Z_LOAD8;
 Z_2prime=inv(Y_2prime);
-U_L8constZ=Z_2prime*[I_N;0;0;0;0;0;0;0]*sqrt(3)*(-1);
+U_L8constZ=Z_2prime*[I_N;0;0;0;0;0;0;0]*sqrt(3);
 U_L8constZ=U_L8constZ*exp(-1i*angle(U_L8constZ(1))); %forgatunk, hogy U1 szoge 0 legyen
-S_L8constZ=3*conj(U_L8constZ(8)/(sqrt(3)*Z_LOAD8))*U_L8constZ(8);
+abs(U_L8constZ);
+radtodeg(angle(U_L8constZ));
+S_L8constZ=3*conj(U_L8constZ(8)/(sqrt(3)*Z_LOAD8))*U_L8constZ(8); % 3UI*
 P_L8constZ=real(S_L8constZ);
 Q_L8constZ=imag(S_L8constZ);
 
 % Aramtarto modell
-S_LOAD8=sqrt(P_LOAD8^2+(P_LOAD8*tan(acos(cosphi_LOAD8)))^2);
 I_LOAD8=S_LOAD8/(sqrt(3)*U_LOAD8)*(cosphi_LOAD8-1i*sin(acos(cosphi_LOAD8)));
 U_L8constI=Z_prime*[I_N;0;0;0;0;0;0;-I_LOAD8]*sqrt(3);
 U_L8constI=U_L8constI*exp(-1i*angle(U_L8constI(1))); %forgatunk, hogy U1 szoge 0 legyen
+abs(U_L8constI);
+radtodeg(angle(U_L8constI));
 S_L8constI=sqrt(3)*conj(I_LOAD8)*U_L8constI(8);
 P_L8constI=real(S_L8constI);
 Q_L8constI=imag(S_L8constI);
