@@ -46,4 +46,4 @@ I_full=[I(1);0;0;I(2);0;I(3);I(4);I(5)];
 U=Z*I_full*sqrt(3);
 abs(U);
 radtodeg(angle(U));
-sqrt(3)*U(8)*conj(I_full(8))
+
