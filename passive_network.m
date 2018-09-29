@@ -133,7 +133,7 @@ P_G=150000000;
 Q_G=80000000;
 phi_G=atan(Q_G/P_G);
 S_G=sqrt(P_G^2+Q_G^2);
-Z_G=Un_G^2/S_G*(cos(phi_G)+1i*sin(phi_G));
+Z_G=Un_G^2/S_G*(cos(phi_G)-1i*sin(phi_G));
 Y_G=1/Z_G;
 I_G=Un_G/sqrt(3)*Y_G;
 abs(I_G);
@@ -183,8 +183,5 @@ radtodeg(angle(U_L8constI));
 S_L8constI=sqrt(3)*conj(I_LOAD8)*U_L8constI(8);
 P_L8constI=real(S_L8constI);
 Q_L8constI=imag(S_L8constI);
-
-
-
 
 
