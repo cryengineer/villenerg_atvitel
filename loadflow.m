@@ -40,4 +40,5 @@ end
 %current and power of slack bus
 I(1)=Y_red(1,:)*V;
 S=V.*conj(I);
-V
+I_full=[I(1);0;0;I(2);0;I(3);I(4);I(5)]
+U=Z*I_full;
